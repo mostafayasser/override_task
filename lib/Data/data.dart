@@ -7,12 +7,13 @@ class Data extends ChangeNotifier {
   static User _user;
   final _firestore = Firestore.instance;
   getData({email}) async {
-    List<TodoItem> todoItems = [];
+    List<TodoItem> todoItems;
     if (_user == null) {
       setUser(User(email: email, items: todoItems));
     }
     var documents = await _firestore.collection(email).getDocuments();
     if (documents != null) {
+      todoItems = [];
       documents.documents.forEach((element) {
           todoItems.add(TodoItem(title: element.data['title'], done: element.data['done']));
           setUser(User(email: email, items: todoItems));

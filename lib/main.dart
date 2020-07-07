@@ -8,6 +8,9 @@ import './screens/signin_screen.dart';
 import './screens/todo_list_screen.dart';
 import './screens/add_item_screen.dart';
 import './screens/edit_item_screen.dart';
+import './screens/main_screen.dart';
+
+
 void main() {
   runApp(MultiProvider(
     providers: [
@@ -26,7 +29,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Override',
       theme: theme.getTheme(),
-      home: SigninScreen(),
+      home: MainScreen(),
       routes: {
         signInScreenRoute : (ctx) => SigninScreen(),
         todoListScreenRoute : (ctx) => TodoListScreen(),

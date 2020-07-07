@@ -9,13 +9,33 @@ import '../models/ThemeNotifier.dart';
 import '../models/auth.dart';
 import '../widgets/todo_card.dart';
 
-
 class TodoListScreen extends StatelessWidget {
-
   @override
   Widget build(BuildContext context) {
     final theme = Provider.of<ThemeNotifier>(context);
     final user = Provider.of<Data>(context).getUser();
+
+    Widget body() {
+      if (user.items == null) {
+        return Center(child: CircularProgressIndicator());
+      } else if (user.items.isEmpty) {
+        return Center(
+          child: Text("Add items"),
+        );
+      } else {
+        return ConstrainedBox(
+            constraints:
+                BoxConstraints(minHeight: MediaQuery.of(context).size.height),
+            child: ListView.builder(
+              itemCount: user.items.length,
+              itemBuilder: (ctx, i) => ToDoCard(
+                title: user.items[i].title,
+                done: user.items[i].done,
+              ),
+            ));
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text("ToDo List"),
@@ -35,26 +55,15 @@ class TodoListScreen extends StatelessWidget {
                   onChanged: (value) => value
                       ? theme.setTheme(darkTheme)
                       : theme.setTheme(lightTheme)),
-          IconButton(icon: Icon(Icons.exit_to_app), onPressed: () {
-            signOut();
-            Navigator.of(context).pushReplacementNamed(signInScreenRoute);
-          })
+          IconButton(
+              icon: Icon(Icons.exit_to_app),
+              onPressed: () {
+                signOut();
+                Navigator.of(context).pushReplacementNamed(signInScreenRoute);
+              })
         ],
       ),
-      body: (!user.items.isEmpty)
-          ? ConstrainedBox(
-              constraints:
-                  BoxConstraints(minHeight: MediaQuery.of(context).size.height),
-              child: ListView.builder(
-                itemCount: user.items.length,
-                itemBuilder: (ctx, i) => ToDoCard(
-                  title: user.items[i].title,
-                  done: user.items[i].done,
-                ),
-              ))
-          : Center(
-              child: Text("Add items"),
-            ),
+      body: body(),
       floatingActionButton: FloatingActionButton(
         onPressed: () => Navigator.of(context).pushNamed(addItemScreenRoute),
         child: Icon(Icons.add),
